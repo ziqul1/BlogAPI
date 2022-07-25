@@ -45,5 +45,30 @@ namespace BlogAPI.Controllers
             return NoContent();
         }
 
+        // POST: api/Author
+        [HttpPost]
+        public async Task<ActionResult<CreateAuthorDTO>> CreateAuthorAsync(CreateAuthorDTO authorDTO)
+        {
+            var author = await _authorService.CreateAuthorAsync(authorDTO);
+
+            return CreatedAtAction(
+                nameof(GetSingleAuthorAsync),
+                new { id = author.Id },
+                author
+                );
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAuthorAsync(int id)
+        {
+            var author = await _authorService.GetSingleAuthorAsync(id);
+            if (author == null)
+                return NotFound();
+
+            if (await _authorService.DeleteAuthorAsync(id))
+                return NoContent();
+
+            return BadRequest();
+        }
     }
 }

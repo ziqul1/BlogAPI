@@ -63,5 +63,41 @@ namespace BlogAPI.Data.Services.Author
 
             return await _blogContext.SaveChangesAsync();
         }
+
+        public async Task<CreateAuthorDTO> CreateAuthorAsync(CreateAuthorDTO authorDTO)
+        {
+            var author = new Models.Author
+            {
+                FirstName = authorDTO.FirstName,
+                LastName = authorDTO.LastName,
+                Email = authorDTO.Email,
+                Age = authorDTO.Age,
+            };
+
+            _blogContext.Authors.Add(author);
+            await _blogContext.SaveChangesAsync();
+
+            return new CreateAuthorDTO
+            {
+                Id = author.Id,
+                FirstName = author.FirstName,
+                LastName = author.LastName,
+                Email = author.Email,
+                Age = author.Age,
+            };
+        }
+
+        public async Task<bool> DeleteAuthorAsync(int id)
+        {
+            var author = await _blogContext.Authors.FirstOrDefaultAsync(x => x.Id == id);
+
+            _blogContext.Authors.Remove(author);
+            if (await _blogContext.SaveChangesAsync() != 1)
+                return false;
+
+            return true;
+        }
+
+
     }
 }
