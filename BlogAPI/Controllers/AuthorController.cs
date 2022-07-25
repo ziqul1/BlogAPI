@@ -58,6 +58,7 @@ namespace BlogAPI.Controllers
                 );
         }
 
+        // DELETE: api/Author/1
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAuthorAsync(int id)
         {

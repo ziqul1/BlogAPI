@@ -89,13 +89,21 @@ namespace BlogAPI.Data.Services.Author
 
         public async Task<bool> DeleteAuthorAsync(int id)
         {
-            var author = await _blogContext.Authors.FirstOrDefaultAsync(x => x.Id == id);
+            var author = await _blogContext.Authors.Include(x => x.AuthorMTMPosts).FirstOrDefaultAsync(x => x.Id == id);
+
+            var listOfPosts = author.AuthorMTMPosts;
+
+            foreach(var post in listOfPosts)
+            {
+                var tempPost = await _blogContext.Posts.Include(x => x.AuthorMTMPosts).FirstOrDefaultAsync(x => x.Id == post.PostId);
+
+                if (tempPost.AuthorMTMPosts.Count == 1)
+                    _blogContext.Posts.Remove(tempPost);
+            }
 
             _blogContext.Authors.Remove(author);
-            if (await _blogContext.SaveChangesAsync() != 1)
-                return false;
+            return await _blogContext.SaveChangesAsync() > 0;
 
-            return true;
         }
 
 
