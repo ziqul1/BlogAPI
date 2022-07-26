@@ -103,9 +103,6 @@ namespace BlogAPI.Data.Services.Author
 
             _blogContext.Authors.Remove(author);
             return await _blogContext.SaveChangesAsync() > 0;
-
         }
-
-
     }
 }
