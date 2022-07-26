@@ -19,22 +19,7 @@ namespace BlogAPI.Data.Services.Author
 
         public async Task<List<GetSingleAuthorDTO>> GetAuthorsAsync()
         {
-            return await _blogContext.Authors.Select(x => new GetSingleAuthorDTO
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                Email = x.Email,
-                Age = x.Age,
-                AuthorMTMPosts = x.AuthorMTMPosts.Select(y => new GetSinglePostDTO
-                {
-                    Id = y.PostId,
-                    Title = y.Post.Title,
-                    Content = y.Post.Content,
-                    CategoryId = y.Post.CategoryId,
-                    CategoryName = y.Post.Category.Name
-                }).ToList(),
-            }).ToListAsync();
+            return await _blogContext.Authors.Select(x => _mapper.Map<GetSingleAuthorDTO>(x)).ToListAsync();
         }
 
         public async Task<GetSingleAuthorDTO> GetSingleAuthorAsync(int id)
