@@ -1,4 +1,5 @@
 using BlogAPI.Data.Services.Author;
+using BlogAPI.Data.Services.Category;
 using BlogAPI.Data.Services.Post;
 using BlogAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ builder.Services.AddDbContext<BlogContext>(
 
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
