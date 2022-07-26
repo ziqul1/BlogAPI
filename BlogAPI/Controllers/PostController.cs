@@ -31,19 +31,19 @@ namespace BlogAPI.Controllers
             return post;
         }
 
-        //// PUT: api/Post/1
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdatePostAsync(int id, UpdatePostDTO postDTO)
-        //{
-        //    var post = await _postService.UpdatePostAsync(id, postDTO);
+        // PUT: api/Post/1
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePostAsync(int id, UpdatePostDTO postDTO)
+        {
+            var post = await _postService.UpdatePostAsync(id, postDTO);
 
-        //    if (post == null)
-        //        return NotFound();
+            if (post == null)
+                return NotFound();
 
-        //    await _postService.UpdatePostAsync(id, postDTO);
+            await _postService.UpdatePostAsync(id, postDTO);
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
         // POST: api/Post
         [HttpPost]

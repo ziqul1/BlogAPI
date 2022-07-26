@@ -35,26 +35,30 @@ namespace BlogAPI.Data.Services.Post
             }).FirstOrDefaultAsync();
         }
 
-        //public async Task<long> UpdatePostAsync(int id, UpdatePostDTO postDTO)
-        //{
-        //    var post = await _blogContext.Posts.FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<long> UpdatePostAsync(int id, UpdatePostDTO postDTO)
+        {
+            var post = await _blogContext.Posts.Include(x => x.AuthorMTMPosts).FirstOrDefaultAsync(x => x.Id == id);
 
-        //    post.FirstName = postDTO.FirstName;
-        //    post.LastName = postDTO.LastName;
-        //    post.Email = postDTO.Email;
-        //    post.Age = postDTO.Age;
+            post.Title = postDTO.Title;
+            post.Content = postDTO.Content;
+            post.CategoryId = postDTO.CategoryId;
+            post.AuthorMTMPosts.Clear();
+            post.AuthorMTMPosts = postDTO.AuthorIds.Select(x => new AuthorMTMPost
+            {
+                AuthorId = x
+            }).ToList();
 
-        //    return await _blogContext.SaveChangesAsync();
-        //}
+            return await _blogContext.SaveChangesAsync();
+        }
 
         public async Task<CreatePostDTO> CreatePostAsync(CreatePostDTO postDTO)
         {
             var post = new Models.Post
             {
                 Id = postDTO.Id,
-                Title  = postDTO.Title,
+                Title = postDTO.Title,
                 Content = postDTO.Content,
-                CategoryId= postDTO.CategoryId,
+                CategoryId = postDTO.CategoryId,
             };
 
             var authors = await _blogContext.Authors.AsNoTracking()
