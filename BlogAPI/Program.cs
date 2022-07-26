@@ -2,13 +2,16 @@ using BlogAPI.Data.Services.Author;
 using BlogAPI.Data.Services.Category;
 using BlogAPI.Data.Services.Post;
 using BlogAPI.Models;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddFluentValidation(c => c.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly())); ;
 
 builder.Services.AddMvc(options =>
 {
