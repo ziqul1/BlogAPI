@@ -1,4 +1,5 @@
-﻿using BlogAPI.Models;
+﻿using AutoMapper;
+using BlogAPI.Models;
 using BlogAPI.Models.DTOs.AuthorDTO;
 using BlogAPI.Models.DTOs.PostDTO;
 using Microsoft.EntityFrameworkCore;
@@ -8,9 +9,13 @@ namespace BlogAPI.Data.Services.Author
     public class AuthorService : IAuthorService
     {
         private readonly BlogContext _blogContext;
+        private readonly IMapper _mapper;
 
-        public AuthorService(BlogContext blogContext)
-            => _blogContext = blogContext;
+        public AuthorService(BlogContext blogContext, IMapper mapper)
+        {
+            _blogContext = blogContext;
+            _mapper = mapper;
+        }
 
         public async Task<List<GetSingleAuthorDTO>> GetAuthorsAsync()
         {
@@ -77,14 +82,7 @@ namespace BlogAPI.Data.Services.Author
             _blogContext.Authors.Add(author);
             await _blogContext.SaveChangesAsync();
 
-            return new CreateAuthorDTO
-            {
-                Id = author.Id,
-                FirstName = author.FirstName,
-                LastName = author.LastName,
-                Email = author.Email,
-                Age = author.Age,
-            };
+            return _mapper.Map<CreateAuthorDTO>(author);
         }
 
         public async Task<bool> DeleteAuthorAsync(int id)
