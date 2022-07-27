@@ -20,27 +20,14 @@ namespace BlogAPI.Data.Services.Post
         public async Task<List<GetSinglePostDTO>> GetPostsAsync()
         {
             return await _blogContext.Posts.Include(x => x.Category).Select(x => _mapper.Map<GetSinglePostDTO>(x)).ToListAsync();
-
-            //return await _blogContext.Posts.Select(x => new GetSinglePostDTO
-            //{
-            //    Id = x.Id,
-            //    Title = x.Title,
-            //    Content = x.Content,
-            //    CategoryId = x.CategoryId,
-            //    CategoryName = x.Category.Name
-            //}).ToListAsync();
         }
 
         public async Task<GetSinglePostDTO> GetSinglePostAsync(int id)
         {
-            return await _blogContext.Posts.Where(x => x.Id == id).Select(x => new GetSinglePostDTO
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Content = x.Content,
-                CategoryId = x.CategoryId,
-                CategoryName = x.Category.Name
-            }).FirstOrDefaultAsync();
+            return await _blogContext.Posts.Include(x => x.Category)
+                .Where(x => x.Id == id)
+                .Select(x => _mapper.Map<GetSinglePostDTO>(x))
+                .FirstOrDefaultAsync();
         }
 
         public async Task<long> UpdatePostAsync(int id, UpdatePostDTO postDTO)
@@ -80,14 +67,7 @@ namespace BlogAPI.Data.Services.Post
             _blogContext.Posts.Add(post);
             await _blogContext.SaveChangesAsync();
 
-            return new CreatePostDTO
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Content = post.Content,
-                CategoryId = post.CategoryId,
-                AuthorIds = post.AuthorMTMPosts.Select(x => x.AuthorId).ToList(),
-            };
+            return _mapper.Map<CreatePostDTO>(post);
         }
 
         public async Task<bool> DeletePostAsync(int id)

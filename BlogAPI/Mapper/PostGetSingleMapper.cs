@@ -13,7 +13,6 @@ namespace BlogAPI.Mapper
               .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
               .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
               .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
-            // gunzo nie wyswietla Category.Name - wypisuje null
         }
     }
 }

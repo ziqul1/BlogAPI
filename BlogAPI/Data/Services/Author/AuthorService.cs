@@ -19,7 +19,12 @@ namespace BlogAPI.Data.Services.Author
 
         public async Task<List<GetSingleAuthorDTO>> GetAuthorsAsync()
         {
-            return await _blogContext.Authors.Include(x => x.AuthorMTMPosts).ThenInclude(x => x.Post).Select(x => _mapper.Map<GetSingleAuthorDTO>(x)).ToListAsync();
+            return await _blogContext.Authors
+                .Include(x => x.AuthorMTMPosts)
+                .ThenInclude(x => x.Post)
+                .ThenInclude(x => x.Category)
+                .Select(x => _mapper.Map<GetSingleAuthorDTO>(x))
+                .ToListAsync();
         }
 
         public async Task<GetSingleAuthorDTO> GetSingleAuthorAsync(int id)
@@ -76,7 +81,7 @@ namespace BlogAPI.Data.Services.Author
 
             var listOfPosts = author.AuthorMTMPosts;
 
-            foreach(var post in listOfPosts)
+            foreach (var post in listOfPosts)
             {
                 var tempPost = await _blogContext.Posts.Include(x => x.AuthorMTMPosts).FirstOrDefaultAsync(x => x.Id == post.PostId);
 
