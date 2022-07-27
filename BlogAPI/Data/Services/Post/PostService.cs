@@ -1,4 +1,5 @@
-﻿using BlogAPI.Models;
+﻿using AutoMapper;
+using BlogAPI.Models;
 using BlogAPI.Models.DTOs.PostDTO;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,20 +8,27 @@ namespace BlogAPI.Data.Services.Post
     public class PostService : IPostService
     {
         private readonly BlogContext _blogContext;
+        private readonly IMapper _mapper;
 
-        public PostService(BlogContext blogContext)
-            => _blogContext = blogContext;
+
+        public PostService(BlogContext blogContext, IMapper mapper)
+        {
+            _blogContext = blogContext;
+            _mapper = mapper;
+        }
 
         public async Task<List<GetSinglePostDTO>> GetPostsAsync()
         {
-            return await _blogContext.Posts.Select(x => new GetSinglePostDTO
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Content = x.Content,
-                CategoryId = x.CategoryId,
-                CategoryName = x.Category.Name
-            }).ToListAsync();
+            return await _blogContext.Posts.Include(x => x.Category).Select(x => _mapper.Map<GetSinglePostDTO>(x)).ToListAsync();
+
+            //return await _blogContext.Posts.Select(x => new GetSinglePostDTO
+            //{
+            //    Id = x.Id,
+            //    Title = x.Title,
+            //    Content = x.Content,
+            //    CategoryId = x.CategoryId,
+            //    CategoryName = x.Category.Name
+            //}).ToListAsync();
         }
 
         public async Task<GetSinglePostDTO> GetSinglePostAsync(int id)

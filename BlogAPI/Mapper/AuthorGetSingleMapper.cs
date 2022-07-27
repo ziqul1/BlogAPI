@@ -15,26 +15,28 @@ namespace BlogAPI.Mapper
                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.Age))
                .ForMember(dest => dest.AuthorMTMPosts, opt => opt.MapFrom(src => src.AuthorMTMPosts
-                .Select(x => x.Post).Select(x => new GetSinglePostDTO
+                .Select(x => x.Post).Select(y => new GetSinglePostDTO
                 {
-                    Id = y.PostId // czy jakos tak
+                    Id = y.Id,
+                    Title = y.Title,
+                    Content = y.Content,
+                    CategoryId = y.CategoryId,
                 }).ToList()));
-
 
         }
 
-    //    Id = x.Id,
-    //            FirstName = x.FirstName,
-    //            LastName = x.LastName,
-    //            Email = x.Email,
-    //            Age = x.Age,
-    //            AuthorMTMPosts = x.AuthorMTMPosts.Select(y => new GetSinglePostDTO
-    //            {
-    //                Id = y.PostId,
-    //                Title = y.Post.Title,
-    //                Content = y.Post.Content,
-    //                CategoryId = y.Post.CategoryId,
-    //                CategoryName = y.Post.Category.Name
-    //}).ToList(),
+        //    Id = x.Id,
+        //            FirstName = x.FirstName,
+        //            LastName = x.LastName,
+        //            Email = x.Email,
+        //            Age = x.Age,
+        //            AuthorMTMPosts = x.AuthorMTMPosts.Select(y => new GetSinglePostDTO
+        //            {
+        //                Id = y.PostId,
+        //                Title = y.Post.Title,
+        //                Content = y.Post.Content,
+        //                CategoryId = y.Post.CategoryId,
+        //                CategoryName = y.Post.Category.Name
+        //}).ToList(),
     }
 }

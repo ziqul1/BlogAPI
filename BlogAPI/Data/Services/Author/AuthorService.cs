@@ -19,7 +19,7 @@ namespace BlogAPI.Data.Services.Author
 
         public async Task<List<GetSingleAuthorDTO>> GetAuthorsAsync()
         {
-            return await _blogContext.Authors.Select(x => _mapper.Map<GetSingleAuthorDTO>(x)).ToListAsync();
+            return await _blogContext.Authors.Include(x => x.AuthorMTMPosts).ThenInclude(x => x.Post).Select(x => _mapper.Map<GetSingleAuthorDTO>(x)).ToListAsync();
         }
 
         public async Task<GetSingleAuthorDTO> GetSingleAuthorAsync(int id)
